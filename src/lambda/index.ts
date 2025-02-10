@@ -1,7 +1,7 @@
 import { Stack, StackProps, Stage, StageProps } from 'aws-cdk-lib';
 import { Code, Runtime, Function as Function } from 'aws-cdk-lib/aws-lambda';
-import { Construct } from 'constructs';
 import { CodePipelineSource, CodePipeline, ShellStep } from 'aws-cdk-lib/pipelines';
+import { Construct } from 'constructs';
 
 
 export interface ILambdaHelloWorldPipelineStackProps extends StackProps {
@@ -41,7 +41,7 @@ export class LambdaHelloWorldStack extends Stack {
       runtime: Runtime.NODEJS_20_X,
       code: Code.fromAsset('./src/lambda/assets'),
       handler: 'hw.handler',
-      environment: { MESSAGE: props.lambdaHelloWorldMessage},
+      environment: { MESSAGE: props.lambdaHelloWorldMessage },
     });
   }
 }
@@ -81,38 +81,6 @@ export class LambdaHelloWorldPipelineStack extends Stack {
           'npx projen synth',
         ],
       }),
-
-      // codeBuildDefaults: {
-      //   partialBuildSpec: BuildSpec.fromObject({
-      //     version: '0.2',
-      //     phases: {
-      //       install: {
-      //         'runtime-versions': {
-      //           nodejs: '18',
-      //         },
-      //       },
-      //     },
-      //   }),
-
-      //   buildEnvironment: {
-      //     buildImage: LinuxBuildImage.STANDARD_7_0,
-
-      //     environmentVariables: {
-      //       NODE_CONFIG_ENV: {
-      //         type: BuildEnvironmentVariableType.PLAINTEXT,
-      //         value: "ENV",
-      //       },
-      //       AWS_ACCOUNT_ID: {
-      //         type: BuildEnvironmentVariableType.PLAINTEXT,
-      //         value: props.env?.account,
-      //       },
-      //       NODE_AUTH_TOKEN: {
-      //         type: BuildEnvironmentVariableType.SECRETS_MANAGER,
-      //         value: 'NpmToken',
-      //       },
-      //     },
-      //   },
-      // },
     });
 
     const LambdaHelloWorldWave = pipeline.addWave('LambdaHelloWorld');
@@ -120,7 +88,7 @@ export class LambdaHelloWorldPipelineStack extends Stack {
       new LambdaHelloWorldPipelineStage(this, 'LambdaHelloWorld', {
         env: props.env,
         lambdaHelloWorldDeploymentConfig: props.lambdaHelloWorldDeploymentConfig,
-      })
+      }),
     );
 
     pipeline.buildPipeline();

@@ -67,7 +67,7 @@ export class UptimeKumaPipelineStack extends Stack {
       new UptimeKumaPipelineStage(this, 'UptimeKuma', {
         env: props.env,
         uptimeKumaDeploymentConfig: props.uptimeKumaDeploymentConfig,
-      })
+      }),
     );
 
     pipeline.buildPipeline();

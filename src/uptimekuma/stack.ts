@@ -117,7 +117,7 @@ export class UptimeKumaStack extends Stack {
     });
 
     return taskDefinition;
-   }
+  }
 
   private createAlbService(
     cluster: Cluster,
@@ -131,7 +131,7 @@ export class UptimeKumaStack extends Stack {
       desiredCount: 1,
       minHealthyPercent: 0,
     });
-    
+
     loadBalancedEcsService.loadBalancer.addSecurityGroup(albSecurityGroup);
 
     loadBalancedEcsService.listener.addAction('DefaultAction', {
@@ -150,9 +150,9 @@ export class UptimeKumaStack extends Stack {
       port: 'traffic-port',
       unhealthyThresholdCount: 5,
       timeout: Duration.seconds(5),
-      healthyThresholdCount: 2 
+      healthyThresholdCount: 2,
     });
 
     return loadBalancedEcsService.loadBalancer;
- }
+  }
 }
