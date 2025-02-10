@@ -47,6 +47,15 @@ junit.xml
 /assets/
 !/cdk.json
 /cdk.out/
-.cdk.staging/
 .parcel-cache/
+package-lock.json
+cdk.context.json
+.cdk.staging/
+.idea/
+cdk.out/
+.DS_Store
+test/__snapshots__/
+.vscode
+build
+.coverage
 !/.projenrc.ts

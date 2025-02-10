@@ -2,179 +2,41 @@
 
 exports[`Snapshot 1`] = `
 {
-  "Description": "UptimeKuma CDK Stack",
+  "Description": "LambdaHelloWorld CDK Stack",
   "Parameters": {
     "BootstrapVersion": {
       "Default": "/cdk-bootstrap/hnb659fds/version",
       "Description": "Version of the CDK Bootstrap resources in this environment, automatically retrieved from SSM Parameter Store. [cdk:skip]",
       "Type": "AWS::SSM::Parameter::Value<String>",
     },
-    "SsmParameterValueawsserviceecsoptimizedamiamazonlinux2recommendedimageidC96584B6F00A464EAD1953AFF4B05118Parameter": {
-      "Default": "/aws/service/ecs/optimized-ami/amazon-linux-2/recommended/image_id",
-      "Type": "AWS::SSM::Parameter::Value<AWS::EC2::Image::Id>",
-    },
   },
   "Resources": {
-    "ASG46ED3070": {
+    "HelloWorldFunctionB2AB6E79": {
+      "DependsOn": [
+        "HelloWorldFunctionServiceRole8E0BD458",
+      ],
       "Properties": {
-        "LaunchTemplate": {
-          "LaunchTemplateId": {
-            "Ref": "LaunchTemplate04EC5460",
-          },
-          "Version": {
-            "Fn::GetAtt": [
-              "LaunchTemplate04EC5460",
-              "LatestVersionNumber",
-            ],
+        "Code": {
+          "S3Bucket": "cdk-hnb659fds-assets-123456789012-us-east-1",
+          "S3Key": "ff27949e005a253204fc5c85e14e2566cb191128fb99cf983d257a25f82a0da4.zip",
+        },
+        "Environment": {
+          "Variables": {
+            "MESSAGE": "test",
           },
         },
-        "MaxSize": "1",
-        "MinSize": "1",
-        "NewInstancesProtectedFromScaleIn": true,
-        "VPCZoneIdentifier": [
-          "p-12345",
-        ],
-      },
-      "Type": "AWS::AutoScaling::AutoScalingGroup",
-      "UpdatePolicy": {
-        "AutoScalingScheduledAction": {
-          "IgnoreUnmodifiedGroupSizeProperties": true,
-        },
-      },
-    },
-    "AlbSecurityGroup86A59E99": {
-      "Properties": {
-        "GroupDescription": "test/AlbSecurityGroup",
-        "SecurityGroupEgress": [
-          {
-            "CidrIp": "0.0.0.0/0",
-            "Description": "Allow all outbound traffic by default",
-            "IpProtocol": "-1",
-          },
-        ],
-        "VpcId": "vpc-12345",
-      },
-      "Type": "AWS::EC2::SecurityGroup",
-    },
-    "AsgCapacityProvider760D11D9": {
-      "Properties": {
-        "AutoScalingGroupProvider": {
-          "AutoScalingGroupArn": {
-            "Ref": "ASG46ED3070",
-          },
-          "ManagedScaling": {
-            "Status": "ENABLED",
-            "TargetCapacity": 100,
-          },
-          "ManagedTerminationProtection": "ENABLED",
-        },
-      },
-      "Type": "AWS::ECS::CapacityProvider",
-    },
-    "AsgSecurityGroupABD137B7": {
-      "Properties": {
-        "GroupDescription": "test/AsgSecurityGroup",
-        "SecurityGroupEgress": [
-          {
-            "CidrIp": "0.0.0.0/0",
-            "Description": "Allow all outbound traffic by default",
-            "IpProtocol": "-1",
-          },
-        ],
-        "SecurityGroupIngress": [
-          {
-            "Description": "ALB Access",
-            "FromPort": 0,
-            "IpProtocol": "tcp",
-            "SourceSecurityGroupId": {
-              "Fn::GetAtt": [
-                "AlbSecurityGroup86A59E99",
-                "GroupId",
-              ],
-            },
-            "ToPort": 65535,
-          },
-        ],
-        "VpcId": "vpc-12345",
-      },
-      "Type": "AWS::EC2::SecurityGroup",
-    },
-    "Cluster3DA9CCBA": {
-      "Properties": {
-        "CapacityProviders": [
-          {
-            "Ref": "AsgCapacityProvider760D11D9",
-          },
-        ],
-        "Cluster": {
-          "Ref": "ClusterEB0386A7",
-        },
-        "DefaultCapacityProviderStrategy": [],
-      },
-      "Type": "AWS::ECS::ClusterCapacityProviderAssociations",
-    },
-    "ClusterEB0386A7": {
-      "Type": "AWS::ECS::Cluster",
-    },
-    "EC2RoleDefaultPolicy64E44857": {
-      "Properties": {
-        "PolicyDocument": {
-          "Statement": [
-            {
-              "Action": [
-                "ecs:DeregisterContainerInstance",
-                "ecs:RegisterContainerInstance",
-                "ecs:Submit*",
-              ],
-              "Effect": "Allow",
-              "Resource": {
-                "Fn::GetAtt": [
-                  "ClusterEB0386A7",
-                  "Arn",
-                ],
-              },
-            },
-            {
-              "Action": [
-                "ecs:Poll",
-                "ecs:StartTelemetrySession",
-              ],
-              "Condition": {
-                "ArnEquals": {
-                  "ecs:cluster": {
-                    "Fn::GetAtt": [
-                      "ClusterEB0386A7",
-                      "Arn",
-                    ],
-                  },
-                },
-              },
-              "Effect": "Allow",
-              "Resource": "*",
-            },
-            {
-              "Action": [
-                "ecs:DiscoverPollEndpoint",
-                "ecr:GetAuthorizationToken",
-                "logs:CreateLogStream",
-                "logs:PutLogEvents",
-              ],
-              "Effect": "Allow",
-              "Resource": "*",
-            },
+        "Handler": "hw.handler",
+        "Role": {
+          "Fn::GetAtt": [
+            "HelloWorldFunctionServiceRole8E0BD458",
+            "Arn",
           ],
-          "Version": "2012-10-17",
         },
-        "PolicyName": "EC2RoleDefaultPolicy64E44857",
-        "Roles": [
-          {
-            "Ref": "EC2RoleF978FC1C",
-          },
-        ],
+        "Runtime": "nodejs20.x",
       },
-      "Type": "AWS::IAM::Policy",
+      "Type": "AWS::Lambda::Function",
     },
-    "EC2RoleF978FC1C": {
+    "HelloWorldFunctionServiceRole8E0BD458": {
       "Properties": {
         "AssumeRolePolicyDocument": {
           "Statement": [
@@ -182,7 +44,7 @@ exports[`Snapshot 1`] = `
               "Action": "sts:AssumeRole",
               "Effect": "Allow",
               "Principal": {
-                "Service": "ec2.amazonaws.com",
+                "Service": "lambda.amazonaws.com",
               },
             },
           ],
@@ -197,261 +59,11 @@ exports[`Snapshot 1`] = `
                 {
                   "Ref": "AWS::Partition",
                 },
-                ":iam::aws:policy/AmazonSSMManagedEC2InstanceDefaultPolicy",
-              ],
-            ],
-          },
-          {
-            "Fn::Join": [
-              "",
-              [
-                "arn:",
-                {
-                  "Ref": "AWS::Partition",
-                },
-                ":iam::aws:policy/service-role/AmazonEC2ContainerServiceforEC2Role",
+                ":iam::aws:policy/service-role/AWSLambdaBasicExecutionRole",
               ],
             ],
           },
         ],
-      },
-      "Type": "AWS::IAM::Role",
-    },
-    "ECSTaskRoleF2ADB362": {
-      "Properties": {
-        "AssumeRolePolicyDocument": {
-          "Statement": [
-            {
-              "Action": "sts:AssumeRole",
-              "Effect": "Allow",
-              "Principal": {
-                "Service": "ecs-tasks.amazonaws.com",
-              },
-            },
-          ],
-          "Version": "2012-10-17",
-        },
-      },
-      "Type": "AWS::IAM::Role",
-    },
-    "LaunchTemplate04EC5460": {
-      "DependsOn": [
-        "EC2RoleDefaultPolicy64E44857",
-        "EC2RoleF978FC1C",
-      ],
-      "Properties": {
-        "LaunchTemplateData": {
-          "IamInstanceProfile": {
-            "Arn": {
-              "Fn::GetAtt": [
-                "LaunchTemplateProfile94AA77CE",
-                "Arn",
-              ],
-            },
-          },
-          "ImageId": {
-            "Ref": "SsmParameterValueawsserviceecsoptimizedamiamazonlinux2recommendedimageidC96584B6F00A464EAD1953AFF4B05118Parameter",
-          },
-          "InstanceType": "t3.medium",
-          "SecurityGroupIds": [
-            {
-              "Fn::GetAtt": [
-                "AsgSecurityGroupABD137B7",
-                "GroupId",
-              ],
-            },
-          ],
-          "TagSpecifications": [
-            {
-              "ResourceType": "instance",
-              "Tags": [
-                {
-                  "Key": "Name",
-                  "Value": "test/LaunchTemplate",
-                },
-              ],
-            },
-            {
-              "ResourceType": "volume",
-              "Tags": [
-                {
-                  "Key": "Name",
-                  "Value": "test/LaunchTemplate",
-                },
-              ],
-            },
-          ],
-          "UserData": {
-            "Fn::Base64": {
-              "Fn::Join": [
-                "",
-                [
-                  "#!/bin/bash
-echo ECS_CLUSTER=",
-                  {
-                    "Ref": "ClusterEB0386A7",
-                  },
-                  " >> /etc/ecs/ecs.config
-sudo iptables --insert FORWARD 1 --in-interface docker+ --destination 169.254.169.254/32 --jump DROP
-sudo service iptables save
-echo ECS_AWSVPC_BLOCK_IMDS=true >> /etc/ecs/ecs.config",
-                ],
-              ],
-            },
-          },
-        },
-        "LaunchTemplateName": "UptimeKumaLaunchTemplate",
-        "TagSpecifications": [
-          {
-            "ResourceType": "launch-template",
-            "Tags": [
-              {
-                "Key": "Name",
-                "Value": "test/LaunchTemplate",
-              },
-            ],
-          },
-        ],
-      },
-      "Type": "AWS::EC2::LaunchTemplate",
-    },
-    "LaunchTemplateProfile94AA77CE": {
-      "Properties": {
-        "Roles": [
-          {
-            "Ref": "EC2RoleF978FC1C",
-          },
-        ],
-      },
-      "Type": "AWS::IAM::InstanceProfile",
-    },
-    "LogGroupF5B46931": {
-      "DeletionPolicy": "Delete",
-      "Properties": {
-        "RetentionInDays": 30,
-      },
-      "Type": "AWS::Logs::LogGroup",
-      "UpdateReplacePolicy": "Delete",
-    },
-    "LogGroupPolicyCFDD4E41": {
-      "Properties": {
-        "PolicyDocument": {
-          "Statement": [
-            {
-              "Action": [
-                "logs:PutLogEvents",
-                "logs:CreateLogStream",
-              ],
-              "Effect": "Allow",
-              "Resource": {
-                "Fn::GetAtt": [
-                  "LogGroupF5B46931",
-                  "Arn",
-                ],
-              },
-            },
-          ],
-          "Version": "2012-10-17",
-        },
-        "PolicyName": "LogGroupPolicyCFDD4E41",
-        "Roles": [
-          {
-            "Ref": "ECSTaskRoleF2ADB362",
-          },
-        ],
-      },
-      "Type": "AWS::IAM::Policy",
-    },
-    "Task79114B6B": {
-      "Properties": {
-        "ContainerDefinitions": [
-          {
-            "Essential": true,
-            "Image": "louislam/uptime-kuma",
-            "LogConfiguration": {
-              "LogDriver": "awslogs",
-              "Options": {
-                "awslogs-group": {
-                  "Ref": "LogGroupF5B46931",
-                },
-                "awslogs-region": "us-east-1",
-                "awslogs-stream-prefix": "main",
-              },
-            },
-            "Memory": 3072,
-            "Name": "Container",
-            "PortMappings": [
-              {
-                "ContainerPort": 3001,
-                "HostPort": 0,
-                "Protocol": "tcp",
-              },
-            ],
-          },
-        ],
-        "ExecutionRoleArn": {
-          "Fn::GetAtt": [
-            "TaskExecutionRoleEF964934",
-            "Arn",
-          ],
-        },
-        "Family": "testTask5E55995A",
-        "NetworkMode": "bridge",
-        "RequiresCompatibilities": [
-          "EC2",
-        ],
-        "TaskRoleArn": {
-          "Fn::GetAtt": [
-            "ECSTaskRoleF2ADB362",
-            "Arn",
-          ],
-        },
-      },
-      "Type": "AWS::ECS::TaskDefinition",
-    },
-    "TaskExecutionRoleDefaultPolicy72339918": {
-      "Properties": {
-        "PolicyDocument": {
-          "Statement": [
-            {
-              "Action": [
-                "logs:CreateLogStream",
-                "logs:PutLogEvents",
-              ],
-              "Effect": "Allow",
-              "Resource": {
-                "Fn::GetAtt": [
-                  "LogGroupF5B46931",
-                  "Arn",
-                ],
-              },
-            },
-          ],
-          "Version": "2012-10-17",
-        },
-        "PolicyName": "TaskExecutionRoleDefaultPolicy72339918",
-        "Roles": [
-          {
-            "Ref": "TaskExecutionRoleEF964934",
-          },
-        ],
-      },
-      "Type": "AWS::IAM::Policy",
-    },
-    "TaskExecutionRoleEF964934": {
-      "Properties": {
-        "AssumeRolePolicyDocument": {
-          "Statement": [
-            {
-              "Action": "sts:AssumeRole",
-              "Effect": "Allow",
-              "Principal": {
-                "Service": "ecs-tasks.amazonaws.com",
-              },
-            },
-          ],
-          "Version": "2012-10-17",
-        },
       },
       "Type": "AWS::IAM::Role",
     },

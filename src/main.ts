@@ -9,20 +9,20 @@ const devEnv = { account: process.env.CDK_DEFAULT_ACCOUNT, region: process.env.C
 new LambdaHelloWorldStack(app, 'LambdaHelloWorld', {
   description: 'Demo CDK Stack',
   env: devEnv,
-  lambdaHelloWorldMessage: 'ProfiSea'
+  lambdaHelloWorldMessage: 'ProfiSea',
 });
 
 new LambdaHelloWorldPipelineStack(app, 'LambdaHelloWorldPipeline', {
   description: 'Demo CDK Stack',
   gitHubRepositoryString: 'yxycman/ps-cdk-demo',
-  env: devEnv,
+  env: { account: '307946657180', region: 'eu-central-1' },
   lambdaHelloWorldDeploymentConfig: [
     {
-      env: { account: process.env.CDK_DEFAULT_ACCOUNT, region: 'us-east-1' },
+      env: { account: '307946657180', region: 'us-east-1' },
       lambdaHelloWorldMessage: 'ProfiSea in us-east-1',
     },
     {
-      env: { account: process.env.CDK_DEFAULT_ACCOUNT, region: 'us-east-2' },
+      env: { account: '307946657180', region: 'us-east-2' },
       lambdaHelloWorldMessage: 'ProfiSea in us-east-2',
     },
   ],
