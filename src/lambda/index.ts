@@ -76,7 +76,7 @@ export class LambdaHelloWorldPipelineStack extends Stack {
         // Installing and building stack with projen
         commands: [
           'n auto',
-          'npm ci',
+          'yarn install',
           'npx projen build',
           'npx projen synth',
         ],
